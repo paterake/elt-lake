@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <scala.tools.version>2.13</scala.tools.version>
         <scala.version>${scala.tools.version}.10</scala.version>
+        <scala-maven-plugin-version>4.7.2</scala-maven-plugin-version>
         <scalatest-maven-plugin-version>2.2.0</scalatest-maven-plugin-version>
         <scalatest.version>3.2.14</scalatest.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
