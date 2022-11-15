@@ -15,7 +15,8 @@ object SparkDataFrame extends App {
   val df = Seq(
     ("a", "1"),
     ("b", "2"),
-    ("c", "3")
+    ("c", "3"),
+    ("d", "4")
   ).toDF("foo/bar", "colb")
   df.printSchema()
 
