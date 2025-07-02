@@ -11,8 +11,8 @@
 
     <modules>
         <module>elt-lake-model-cfg</module>
-        <module>elt-lake-cfg-ingest</module>
-        <module>elt-lake-cfg-transform</module>
+        <module>elt-lake-cfg-ingestion</module>
+        <module>elt-lake-cfg-transformation</module>
         <module>elt-lake-test</module>
     </modules>
 
