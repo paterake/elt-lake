@@ -18,53 +18,307 @@
 
 
     <properties>
-        <encoding>UTF-8</encoding>
-        <java.version>11</java.version>
-        <scala.tools.version>2.13</scala.tools.version>
-        <scala.version>${scala.tools.version}.10</scala.version>
-        <scala-maven-plugin-version>4.7.2</scala-maven-plugin-version>
-        <scalatest-maven-plugin-version>2.2.0</scalatest-maven-plugin-version>
-        <scalatest.version>3.2.14</scalatest.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Compile Related jars -->
+        <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven.shade.version>3.4.1</maven.shade.version>
-        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
-        <spark.version>3.3.1</spark.version>
-        <jackson.databind.version>2.13.4.1</jackson.databind.version>
-        <jackson.module.version>2.13.4</jackson.module.version>
+
+        <!-- Maven build related jars -->
+        <maven-shade.version>3.6.0</maven-shade.version>
+        <scala-maven-plugin.version>4.9.2</scala-maven-plugin.version>
+        <scalatest-maven-plugin.version>2.2.0</scalatest-maven-plugin.version>
+        <scalatest.version>3.2.18</scalatest.version>
+
+
+        <!-- AWS EMR Related jars -->
+        <aws.java.sdk.version>2.31.16</aws.java.sdk.version>
+        <hadoop.version>3.4.1</hadoop.version>
+        <spark.version>3.5.5</spark.version>
+        <scala.version>2.12.18</scala.version>
+        <scala.tools.version>2.12</scala.tools.version>
+
+        <!-- AWS Other Related jars -->
+        <aws.s3tables.version>0.1.6</aws.s3tables.version>
+        <aws.lambda.java.core.version>1.3.0</aws.lambda.java.core.version>
+        <aws.lambda.java.events.version>3.15.0</aws.lambda.java.events.version>
+
+        <!-- Spark related jars -->
+        <apache.http.client.version>4.5.14</apache.http.client.version>
+        <commons.compress.version>1.23.0</commons.compress.version>
+        <commons.io.version>2.16.1</commons.io.version>
+        <jackson.version>2.15.2</jackson.version>
+        <scala.xml.version>2.1.0</scala.xml.version>
+        <slf4j.version>2.0.7</slf4j.version>
+        <json4s-jackson.version>3.7.0-M11</json4s-jackson.version>
+        <log4j-core.version>2.20.0</log4j-core.version>
+
+        <!-- Application specific related jars -->
+        <circe.version>0.14.13</circe.version>
+        <confluent.kafka.version>7.8.0</confluent.kafka.version>
+        <databricks.spark.version>0.18.0</databricks.spark.version>
+        <jdbc.mariadb.version>3.4.1</jdbc.mariadb.version>
+        <jdbc.mssql.version>11.2.3.jre17</jdbc.mssql.version>
+        <jdbc.mysql.version>9.0.0</jdbc.mysql.version>
+        <jdbc.postgresql.version>42.7.4</jdbc.postgresql.version>
+        <mongo-spark-connector.version>10.4.0</mongo-spark-connector.version>
+        <mongodb-driver.version>5.1.3</mongodb-driver.version>
+        <mongodb-jdbc.version>2.2.0</mongodb-jdbc.version>
+        <openlineage.version>1.30.0</openlineage.version>
+        <pdfbox.version>3.0.3</pdfbox.version>
+        <typesafe.version>1.4.3</typesafe.version>
+        <kafka.version>3.9.0</kafka.version>
+        <avro.version>1.12.0</avro.version>
+        <kafka.avro.serializer.version>7.7.2</kafka.avro.serializer.version>
+        <tika.version>3.0.0</tika.version>
+        <spark-excel.version>3.5.1_0.20.4</spark-excel.version>
+
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
             <dependency>
-                <groupId>com.fasterxml.jackson.module</groupId>
-                <artifactId>jackson-module-scala_${scala.tools.version}</artifactId>
-                <version>${jackson.module.version}</version>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${apache.http.client.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws.java.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- AWS Lambda Java Core Library -->
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-lambda-java-core</artifactId>
+                <version>${aws.lambda.java.core.version}</version>
+            </dependency>
+
+            <!-- AWS Lambda Java Events Library -->
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-lambda-java-events</artifactId>
+                <version>${aws.lambda.java.events.version}</version>
+            </dependency>
+
+            <!-- AWS S3 Tables -->
+            <dependency>
+                <groupId>software.amazon.s3tables</groupId>
+                <artifactId>s3-tables-catalog-for-iceberg-runtime</artifactId>
+                <version>${aws.s3tables.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons.compress.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.databind.version}</version>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.typesafe</groupId>
+                <artifactId>config</artifactId>
+                <version>${typesafe.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.scala-lang</groupId>
                 <artifactId>scala-library</artifactId>
                 <version>${scala.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>org.scalatest</groupId>
-                <artifactId>scalatest_${scala.tools.version}</artifactId>
-                <version>${scalatest.version}</version>
+                <groupId>org.scala-lang.modules</groupId>
+                <artifactId>scala-xml_2.12</artifactId>
+                <version>${scala.xml.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.databricks</groupId>
+                <artifactId>spark-xml_2.12</artifactId>
+                <version>${databricks.spark.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-core_2.12</artifactId>
+                <version>${spark.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.spark</groupId>
-                <artifactId>spark-core_2.13</artifactId>
+                <artifactId>spark-sql_2.12</artifactId>
                 <version>${spark.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.apache.spark</groupId>
-                <artifactId>spark-sql_2.13</artifactId>
-                <version>${spark.version}</version>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j2-impl</artifactId>
+                <version>${log4j-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb.spark</groupId>
+                <artifactId>mongo-spark-connector_2.12</artifactId>
+                <version>${mongo-spark-connector.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-sync</artifactId>
+                <version>${mongodb-driver.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-jdbc</artifactId>
+                <version>${mongodb-jdbc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${jdbc.postgresql.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mariadb.jdbc</groupId>
+                <artifactId>mariadb-java-client</artifactId>
+                <version>${jdbc.mariadb.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${jdbc.mysql.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.microsoft.sqlserver</groupId>
+                <artifactId>mssql-jdbc</artifactId>
+                <version>${jdbc.mssql.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdfbox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox-tools</artifactId>
+                <version>${pdfbox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json4s</groupId>
+                <artifactId>json4s-jackson_2.12</artifactId>
+                <version>${json4s-jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka_2.12</artifactId>
+                <version>${kafka.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro</artifactId>
+                <version>${avro.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-avro-serializer</artifactId>
+                <version>${kafka.avro.serializer.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-core</artifactId>
+                <version>${tika.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-parsers-standard-package</artifactId>
+                <version>${tika.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.circe</groupId>
+                <artifactId>circe-core_2.12</artifactId>
+                <version>${circe.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.circe</groupId>
+                <artifactId>circe-parser_2.12</artifactId>
+                <version>${circe.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.circe</groupId>
+                <artifactId>circe-generic_2.12</artifactId>
+                <version>${circe.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.crealytics</groupId>
+                <artifactId>spark-excel_2.12</artifactId>
+                <version>${spark-excel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.confluent</groupId>
+                <artifactId>monitoring-interceptors</artifactId>
+                <version>${confluent.kafka.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.openlineage</groupId>
+                <artifactId>openlineage-spark_2.12</artifactId>
+                <version>${openlineage.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.openlineage</groupId>
+                <artifactId>transports-s3</artifactId>
+                <version>${openlineage.version}</version>
             </dependency>
         </dependencies>
 
@@ -73,10 +327,18 @@
     <dependencies>
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_${scala.tools.version}</artifactId>
+            <artifactId>scalatest_2.12</artifactId>
+            <version>${scalatest.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>confluent</id>
+            <url>https://packages.confluent.io/maven/</url>
+        </repository>
+    </repositories>
 
     <build>
         <pluginManagement>
@@ -84,7 +346,7 @@
                 <plugin>
                     <groupId>net.alchim31.maven</groupId>
                     <artifactId>scala-maven-plugin</artifactId>
-                    <version>${scala-maven-plugin-version}</version>
+                    <version>${scala-maven-plugin.version}</version>
                     <executions>
                         <!--
                         <execution>
@@ -128,11 +390,11 @@
                 <plugin>
                     <groupId>org.scalatest</groupId>
                     <artifactId>scalatest-maven-plugin</artifactId>
-                    <version>${scalatest-maven-plugin-version}</version>
+                    <version>${scalatest-maven-plugin.version}</version>
                     <configuration>
                         <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                         <junitxml>.</junitxml>
-                        <filereports>TestSuite.txt</filereports>
+                        <filereports>WDF TestSuite.txt</filereports>
                     </configuration>
                     <executions>
                         <execution>
@@ -157,7 +419,5 @@
             </plugin>
         </plugins>
     </build>
-
-
 
 </project>
